@@ -1826,7 +1826,7 @@ static void ath10k_wmi_op_ep_tx_credits(struct ath10k *ar)
 {
 	/* try to send pending beacons first. they take priority */
 	ath10k_wmi_tx_beacons_nowait(ar);
-
+	ath10k_wmi_wait_for_tx_beacons_ready(ar);
 	ath10k_wait_wakeup_one(&ar->wmi.tx_credits_wq);
 }
 
