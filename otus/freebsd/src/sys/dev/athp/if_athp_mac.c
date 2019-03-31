@@ -5054,7 +5054,8 @@ int ath10k_start(struct ath10k *ar)
 		ath10k_err(ar, "Could not init core: %d\n", ret);
 		goto err_power_down;
 	}
-
+	/* UNLOCK For all the wmi calls which now use the arvif lock */
+	ATHP_CONF_UNLOCK(ar);
 	ret = ath10k_wmi_pdev_set_param(ar, ar->wmi.pdev_param->pmf_qos, 1);
 	if (ret) {
 		ath10k_warn(ar, "failed to enable PMF QOS: %d\n", ret);
@@ -5084,11 +5085,11 @@ int ath10k_start(struct ath10k *ar)
 			goto err_core_stop;
 		}
 	}
-
+	ATHP_CONF_LOCK(ar);
 	if (ar->cfg_tx_chainmask)
 		__ath10k_set_antenna(ar, ar->cfg_tx_chainmask,
 				     ar->cfg_rx_chainmask);
-
+	
 	/*
 	 * By default FW set ARP frames ac to voice (6). In that case ARP
 	 * exchange is not working properly for UAPSD enabled AP. ARP requests
@@ -5097,7 +5098,7 @@ int ath10k_start(struct ath10k *ar)
 	 * to 6. Set ARP frames access category to best effort (0) solves
 	 * this problem.
 	 */
-
+	ATHP_CONF_UNLOCK(ar);
 	ret = ath10k_wmi_pdev_set_param(ar,
 					ar->wmi.pdev_param->arp_ac_override, 0);
 	if (ret) {
@@ -5113,7 +5114,7 @@ int ath10k_start(struct ath10k *ar)
 			    ret);
 		goto err_core_stop;
 	}
-
+	ATHP_CONF_LOCK(ar);
 	ar->ani_enabled = true;
 
 	ar->num_started_vdevs = 0;
