@@ -1502,7 +1502,12 @@ ath10k_core_start(struct ath10k *ar, enum ath10k_firmware_mode mode)
 		}
 	}
 
+	/* unlock for another wmi call */
+	ATHP_CONF_UNLOCK(ar);
 	status = ath10k_debug_start(ar);
+	ATHP_CONF_LOCK(ar);
+
+	
 	if (status)
 		goto err_hif_stop;
 
