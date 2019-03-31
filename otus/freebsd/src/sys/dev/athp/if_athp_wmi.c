@@ -1814,19 +1814,21 @@ static void ath10k_wmi_tx_beacons_nowait(struct ath10k *ar)
 	 * Note: the reason for holding conf lock is that said
 	 * lock looks after the arvifs list.
 	 */
-	ATHP_ARVIF_LOCK(ar);
+	//ATHP_ARVIF_LOCK(ar);
 	TAILQ_FOREACH(vif, &ar->arvifs, next) {
 		ath10k_wmi_tx_beacon_nowait(vif);
 	}
-	ATHP_ARVIF_UNLOCK(ar);
+	//ATHP_ARVIF_UNLOCK(ar);
 	ath10k_compl_wakeup_one(&ar->wmi.tx_beacons_ready);
 }
 
 static void ath10k_wmi_op_ep_tx_credits(struct ath10k *ar)
 {
 	/* try to send pending beacons first. they take priority */
+	ATHP_ARVIF_LOCK(ar);
 	ath10k_wmi_tx_beacons_nowait(ar);
 	ath10k_wmi_wait_for_tx_beacons_ready(ar);
+	ATHP_ARVIF_UNLOCK(ar);
 	//ath10k_wait_wakeup_one(&ar->wmi.tx_credits_wq);
 }
 
@@ -1850,7 +1852,7 @@ int ath10k_wmi_cmd_send(struct ath10k *ar, struct athp_buf *pbuf, u32 cmd_id)
 	 * XXX TODO: this is in milliseconds, which likely needs to be more
 	 * frequent for this kind of thing.
 	 */
-
+	ATHP_ARVIF_LOCK(ar);
 	while (! ieee80211_time_after(ticks, interval)) {
 		/*ath10k_wait_wait(&ar->wmi.tx_credits_wq, "tx_credits_wq",
 		    &ar->sc_conf_mtx, 1);*/
@@ -1869,10 +1871,10 @@ int ath10k_wmi_cmd_send(struct ath10k *ar, struct athp_buf *pbuf, u32 cmd_id)
 		if (ret != -EAGAIN)
 			break;
 	}
-
+	ATHP_ARVIF_UNLOCK(ar);
 	if (ret)
 		athp_freebuf(ar, &ar->buf_tx, pbuf);
-
+	
 	return ret;
 }
 
