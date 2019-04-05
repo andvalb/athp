@@ -23,7 +23,7 @@
 #include "hal/htt.h"
 
 #include "athp_idr.h"
-
+#include <sys/mutex.h>
 #include <sys/kdb.h>
 
 #include "if_athp_buf.h"

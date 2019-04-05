@@ -124,6 +124,7 @@ __ath10k_pci_rx_post_buf(struct ath10k_pci_pipe *pipe)
 {
 	struct ath10k *ar = pipe->ar;
 	struct ath10k_pci *ar_pci = pipe->psc;
+    UNUSED(ar_pci);
 	struct ath10k_ce_pipe *ce_pipe = pipe->ce_hdl;
 	struct athp_buf *pbuf;
 	int ret;
@@ -174,6 +175,7 @@ __ath10k_pci_rx_post_pipe(struct ath10k_pci_pipe *pipe)
 {
 	struct ath10k *ar = pipe->ar;
 	struct ath10k_pci *ar_pci = pipe->psc;
+    UNUSED(ar_pci);
 	struct ath10k_ce_pipe *ce_pipe = pipe->ce_hdl;
 	int ret, num;
 

@@ -5,7 +5,7 @@
 KMOD    = if_athp
 
 # Ok, I'll start using more linux-y things soon.
-CFLAGS+=	-I${SYSDIR}/compat/linuxkpi/common/include/
+CFLAGS+=	-I${SYSDIR}/compat/linuxkpi/common/include/ -DINVARIANT_SUPPORT
 
 # Top-level FreeBSD glue (device, netif, busdma, etc)
 SRCS    = if_athp_pci.c if_athp_main.c			\

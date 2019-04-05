@@ -20,6 +20,9 @@
 #ifndef	__IF_ATHP_PCI_CE_H__
 #define	__IF_ATHP_PCI_CE_H__
 
+/* Ignore unused variables */
+#define UNUSED(x) (void)(x)
+
 /* Copy Engine pieces */
 
 /* Maximum number of Copy Engine's supported */
