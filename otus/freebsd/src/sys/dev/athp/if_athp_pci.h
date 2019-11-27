@@ -61,6 +61,7 @@ struct ath10k_pci {
 	 * ath10k pci state
 	 */
 	int			num_msi_intrs;
+	int			num_msix_intrs;
 	uint16_t		link_ctl;
 
 	/* Power management state */
